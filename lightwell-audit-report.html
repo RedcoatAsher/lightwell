@@ -10,113 +10,129 @@
 <link href="https://fonts.googleapis.com/css2?family=Petrona:opsz,wght@8..30,500;8..30,600&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FAF6EE; --bg-2:#F1EADA; --panel:#FFFFFF;
-  --ink:#211A10; --ink-2:#5B4F3D; --ink-3:#8B7F6A;
-  --line:#E4D9C4; --line-2:#D5C7A9;
-  --accent:#B5610C; --accent-2:#8F4B08;
-  --critical:#A83A2A; --critical-bg:#F7E4DE;
-  --high:#B5610C; --high-bg:#F6E7D2;
-  --medium:#7A6A2A; --medium-bg:#F0EAD0;
-  --good:#3E7A5C; --good-bg:#DFEEE5;
+  --bg:#F1F4F3; --bg-2:#E5EAE8; --panel:#FFFFFF;
+  --ink:#101817; --ink-2:#46595A; --ink-3:#75898A;
+  --line:#DCE4E1; --line-2:#C9D5D1;
+  --accent:#0B6E67; --accent-2:#085650; --accent-soft:#E3F0EE;
+  --critical:#AC3324; --critical-bg:#F8E3DE;
+  --high:#9C5B0A; --high-bg:#F5E7D0;
+  --medium:#6E6612; --medium-bg:#F0EDCE;
+  --good:#1D7A4C; --good-bg:#DEF0E5;
   --serif:'Petrona', Georgia, 'Times New Roman', serif;
   --sans:'Public Sans', -apple-system, 'Segoe UI', sans-serif;
   --mono:'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#100D08; --bg-2:#171310; --panel:#1A1611;
-    --ink:#F0E9DA; --ink-2:#C4B8A2; --ink-3:#8E8271;
-    --line:#332C22; --line-2:#453B2C;
-    --accent:#E0913C; --accent-2:#F0A94F;
-    --critical:#E2725A; --critical-bg:#2E1712;
-    --high:#E0913C; --high-bg:#2E2311;
-    --medium:#C9B657; --medium-bg:#28250F;
-    --good:#6FBE97; --good-bg:#122019;
+    --bg:#0A1211; --bg-2:#101B19; --panel:#131F1D;
+    --ink:#E7EFEC; --ink-2:#AFC4C0; --ink-3:#7A928E;
+    --line:#243330; --line-2:#33463F;
+    --accent:#33D6C6; --accent-2:#5FE6D8; --accent-soft:#122522;
+    --critical:#E27158; --critical-bg:#2E1712;
+    --high:#E0A23C; --high-bg:#2E2411;
+    --medium:#C7BE57; --medium-bg:#26260F;
+    --good:#63C58F; --good-bg:#0F231B;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#100D08; --bg-2:#171310; --panel:#1A1611;
-  --ink:#F0E9DA; --ink-2:#C4B8A2; --ink-3:#8E8271;
-  --line:#332C22; --line-2:#453B2C;
-  --accent:#E0913C; --accent-2:#F0A94F;
-  --critical:#E2725A; --critical-bg:#2E1712;
-  --high:#E0913C; --high-bg:#2E2311;
-  --medium:#C9B657; --medium-bg:#28250F;
-  --good:#6FBE97; --good-bg:#122019;
+  --bg:#0A1211; --bg-2:#101B19; --panel:#131F1D;
+  --ink:#E7EFEC; --ink-2:#AFC4C0; --ink-3:#7A928E;
+  --line:#243330; --line-2:#33463F;
+  --accent:#33D6C6; --accent-2:#5FE6D8; --accent-soft:#122522;
+  --critical:#E27158; --critical-bg:#2E1712;
+  --high:#E0A23C; --high-bg:#2E2411;
+  --medium:#C7BE57; --medium-bg:#26260F;
+  --good:#63C58F; --good-bg:#0F231B;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{color-scheme:light dark}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
-.page{max-width:920px;margin:0 auto;padding:64px 32px 120px}
+html{color-scheme:light dark;scrollbar-color:var(--line-2) var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-wrap:break-word}
+::selection{background:var(--accent);color:var(--panel)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.page{max-width:920px;margin:0 auto;padding:64px 32px 120px;min-width:0}
 @media (max-width:640px){.page{padding:40px 18px 80px}}
 
 /* header */
 .masthead{border-bottom:2px solid var(--ink);padding-bottom:28px;margin-bottom:40px}
-.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:14px}
-.kicker::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%}
-h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5vw,46px);letter-spacing:-.01em;text-wrap:balance;margin-bottom:10px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,6vw,46px);letter-spacing:-.01em;text-wrap:balance;margin-bottom:10px}
 .subhead{color:var(--ink-2);font-size:15px;max-width:60ch}
-.meta-row{display:flex;flex-wrap:wrap;gap:24px;margin-top:20px;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:20px;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.meta-row span{min-width:0}
 .meta-row b{color:var(--ink-2);font-weight:600}
 
 /* score block */
-.scoreboard{display:grid;grid-template-columns:200px 1fr;gap:32px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:32px;margin-bottom:44px}
-@media (max-width:640px){.scoreboard{grid-template-columns:1fr}}
-.score-hero{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;border-right:1px solid var(--line);padding-right:32px}
-@media (max-width:640px){.score-hero{border-right:none;border-bottom:1px solid var(--line);padding-right:0;padding-bottom:20px}}
-.score-num{font-family:var(--serif);font-size:64px;font-weight:600;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
-.score-num sup{font-size:22px;color:var(--ink-3);font-family:var(--sans);font-weight:500}
-.score-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:8px}
-.subscores{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px}
-.subscore-row{display:flex;align-items:center;gap:12px}
-.subscore-name{font-size:13px;color:var(--ink-2);flex:1}
-.subscore-bar{width:70px;height:5px;background:var(--bg-2);border-radius:3px;overflow:hidden;flex-shrink:0}
-.subscore-fill{height:100%;background:var(--accent);border-radius:3px}
-.subscore-val{font-family:var(--mono);font-size:12px;color:var(--ink);width:32px;text-align:right;font-variant-numeric:tabular-nums}
+.scoreboard{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:32px;margin-bottom:44px}
+@media (max-width:640px){.scoreboard{grid-template-columns:1fr;justify-items:center;text-align:center}}
+
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+.gauge{--pct:0;width:150px;height:150px;border-radius:50%;position:relative;display:grid;place-items:center;
+  background:conic-gradient(var(--gauge-color) calc(var(--pct)*1%), var(--bg-2) 0);
+  transition:background .2s linear;}
+.gauge::before{content:'';position:absolute;inset:13px;border-radius:50%;background:var(--panel);box-shadow:inset 0 1px 3px rgba(0,0,0,.08)}
+.gauge-readout{position:relative;z-index:1;font-family:var(--serif);font-weight:600;font-size:38px;color:var(--gauge-color);font-variant-numeric:tabular-nums;line-height:1}
+.gauge-readout sup{font-family:var(--sans);font-size:14px;color:var(--ink-3);font-weight:500;margin-left:1px}
+.score-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+
+.subscores{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;min-width:0}
+@media (max-width:480px){.subscores{grid-template-columns:1fr}}
+.subscore-row{display:flex;align-items:center;gap:12px;min-width:0}
+.subscore-name{font-size:13px;color:var(--ink-2);flex:1;min-width:0}
+.subscore-bar{width:64px;height:5px;background:var(--bg-2);border-radius:3px;overflow:hidden;flex-shrink:0}
+.subscore-fill{display:block;height:100%;width:var(--w);background:var(--row-color);border-radius:3px;transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease)}
+.subscore-fill.on{transform:scaleX(1)}
+.subscore-val{font-family:var(--mono);font-size:12px;color:var(--row-color);width:30px;text-align:right;font-variant-numeric:tabular-nums;flex-shrink:0}
 
 /* sections */
 section{margin-bottom:52px}
-.section-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line-2);padding-bottom:12px;margin-bottom:24px}
-.section-num{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line-2);padding-bottom:12px;margin-bottom:24px}
 h2{font-family:var(--serif);font-size:24px;font-weight:600}
-.section-score{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--ink-2)}
-.section-score b{color:var(--accent)}
+.section-score{font-family:var(--mono);font-size:13px;color:var(--ink-2);white-space:nowrap}
+.section-score b{color:var(--tone)}
 .section-intro{color:var(--ink-2);font-size:14.5px;max-width:68ch;margin-bottom:22px}
 
 /* finding cards */
-.finding{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:14px}
+.finding{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:14px;transition:border-color .18s var(--ease),transform .18s var(--ease),box-shadow .18s var(--ease)}
+.finding:hover{border-color:var(--sev);transform:translateY(-2px);box-shadow:0 8px 20px -12px rgba(0,0,0,.25)}
 .finding-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .sev-chip{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:3px 9px;border-radius:20px;color:var(--sev);background:var(--sev-bg)}
-.finding-title{font-weight:700;font-size:15.5px}
+.finding-title{font-weight:700;font-size:15.5px;min-width:0}
 .finding-body{display:grid;gap:8px;font-size:14px;color:var(--ink-2)}
 .finding-body p{line-height:1.55}
 .finding-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);display:inline-block;width:56px;flex-shrink:0}
-.finding-line{display:flex;gap:10px}
-.finding-line p{flex:1}
-code{font-family:var(--mono);font-size:.9em;background:var(--bg-2);padding:1px 5px;border-radius:4px;color:var(--ink)}
+.finding-line{display:flex;gap:10px;min-width:0}
+.finding-line p{flex:1;min-width:0}
+code{font-family:var(--mono);font-size:.9em;background:var(--bg-2);padding:1px 5px;border-radius:4px;color:var(--ink);overflow-wrap:break-word}
 
 /* good/pass list */
-.pass-list{display:grid;gap:8px}
-.pass-item{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink-2);background:var(--good-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.pass-list{display:grid;gap:8px;min-width:0}
+.pass-item{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink-2);background:var(--good-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;min-width:0;transition:background .15s var(--ease)}
+.pass-item:hover{background:color-mix(in srgb, var(--good-bg) 70%, var(--good) 8%)}
 .pass-item::before{content:'✓';color:var(--good);font-weight:700;flex-shrink:0}
+.pass-item span{min-width:0}
 
 /* action plan */
 .plan-table{width:100%;border-collapse:collapse;font-size:13.5px}
 .plan-table th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:8px 12px;border-bottom:1px solid var(--line-2)}
 .plan-table td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
 .plan-table tr:last-child td{border-bottom:none}
+.plan-table tbody tr{transition:background .15s var(--ease)}
+.plan-table tbody tr:hover{background:var(--bg-2)}
 .plan-num{font-family:var(--mono);color:var(--ink-3)}
-.tbl-wrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.tbl-wrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;-webkit-overflow-scrolling:touch}
 .tbl-wrap .plan-table{min-width:640px}
 
 footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+
+@media (prefers-reduced-motion: reduce){
+  .finding,.pass-item,.plan-table tbody tr,.subscore-fill,.gauge{transition:none}
+}
 </style>
 </head>
 <body>
 <div class="page">
 
   <div class="masthead">
-    <div class="kicker">Site Audit</div>
     <h1>Lightwell — Site Audit Report</h1>
     <p class="subhead">Technical SEO, AI-search readiness, engagement, analytics, and security review of lightwellhq.com, based on the live production page.</p>
     <div class="meta-row">
@@ -127,29 +143,31 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-fa
   </div>
 
   <div class="scoreboard">
-    <div class="score-hero">
-      <div class="score-num">4.6<sup>/10.0</sup></div>
+    <div class="gauge-wrap">
+      <div class="gauge" id="gauge" data-score="4.6" style="--gauge-color:var(--critical)">
+        <div class="gauge-readout" id="gaugeReadout">0.0<sup>/10</sup></div>
+      </div>
       <div class="score-label">Overall score</div>
     </div>
-    <div class="subscores">
-      <div class="subscore-row"><span class="subscore-name">SEO</span><span class="subscore-bar"><span class="subscore-fill" style="width:65%"></span></span><span class="subscore-val">6.5</span></div>
-      <div class="subscore-row"><span class="subscore-name">AI-SEO</span><span class="subscore-bar"><span class="subscore-fill" style="width:35%"></span></span><span class="subscore-val">3.5</span></div>
-      <div class="subscore-row"><span class="subscore-name">Engagement</span><span class="subscore-bar"><span class="subscore-fill" style="width:55%"></span></span><span class="subscore-val">5.5</span></div>
-      <div class="subscore-row"><span class="subscore-name">Analytics</span><span class="subscore-bar"><span class="subscore-fill" style="width:5%"></span></span><span class="subscore-val">0.5</span></div>
-      <div class="subscore-row"><span class="subscore-name">Security</span><span class="subscore-bar"><span class="subscore-fill" style="width:60%"></span></span><span class="subscore-val">6.0</span></div>
-      <div class="subscore-row"><span class="subscore-name">Content depth</span><span class="subscore-bar"><span class="subscore-fill" style="width:30%"></span></span><span class="subscore-val">3.0</span></div>
+    <div class="subscores" id="subscores">
+      <div class="subscore-row" style="--row-color:var(--high)"><span class="subscore-name">SEO</span><span class="subscore-bar"><span class="subscore-fill" style="--w:65%"></span></span><span class="subscore-val">6.5</span></div>
+      <div class="subscore-row" style="--row-color:var(--critical)"><span class="subscore-name">AI-SEO</span><span class="subscore-bar"><span class="subscore-fill" style="--w:35%"></span></span><span class="subscore-val">3.5</span></div>
+      <div class="subscore-row" style="--row-color:var(--high)"><span class="subscore-name">Engagement</span><span class="subscore-bar"><span class="subscore-fill" style="--w:55%"></span></span><span class="subscore-val">5.5</span></div>
+      <div class="subscore-row" style="--row-color:var(--critical)"><span class="subscore-name">Analytics</span><span class="subscore-bar"><span class="subscore-fill" style="--w:5%"></span></span><span class="subscore-val">0.5</span></div>
+      <div class="subscore-row" style="--row-color:var(--high)"><span class="subscore-name">Security</span><span class="subscore-bar"><span class="subscore-fill" style="--w:60%"></span></span><span class="subscore-val">6.0</span></div>
+      <div class="subscore-row" style="--row-color:var(--critical)"><span class="subscore-name">Content depth</span><span class="subscore-bar"><span class="subscore-fill" style="--w:30%"></span></span><span class="subscore-val">3.0</span></div>
     </div>
   </div>
 
   <section>
-    <div class="section-head"><span class="section-num">00</span><h2>Executive summary</h2></div>
+    <div class="section-head"><h2>Executive summary</h2></div>
     <div class="section-intro">
       The page is well-built at the craft level — clean semantics, one H1, real schema markup, HTTPS, honeypot spam protection, no leaked secrets. But three things pull the score down hard: <b style="color:var(--ink)">there is no analytics on the site at all</b> (zero pageview or conversion tracking of any kind), <b style="color:var(--ink)">the security headers set at the server are silently dropped on the live page</b> (they only appear on the HTTP→HTTPS redirect, not on the actual page you land on), and the site is a <b style="color:var(--ink)">single 451-word page</b> with no case studies, testimonials, or supporting content — thin for a consultancy asking $600–$3,500, and thin for both classic SEO and AI-answer-engine citation. The irony worth naming: this is a UX diagnostics business, and its own site has no instrumentation to diagnose itself.
     </div>
   </section>
 
   <section>
-    <div class="section-head"><span class="section-num">01</span><h2>SEO</h2><span class="section-score">6.5<b> /10</b></span></div>
+    <div class="section-head"><h2>SEO</h2><span class="section-score" style="--tone:var(--high)">6.5<b> /10</b></span></div>
     <p class="section-intro">Technical foundation is solid — robots.txt, sitemap, canonical, one H1, alt text, semantic schema. The gaps are truncated metadata, a render-blocking third-party script, and a site too thin to earn topical authority.</p>
 
     <div class="finding" style="--sev:var(--high);--sev-bg:var(--high-bg)">
@@ -190,16 +208,16 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-fa
 
     <h2 style="font-size:16px;margin:28px 0 12px;color:var(--ink-2)">What's already right</h2>
     <div class="pass-list">
-      <div class="pass-item">robots.txt is open (<code>Allow: /</code>) and correctly references the sitemap.</div>
-      <div class="pass-item">Self-referencing canonical tag present and correct.</div>
-      <div class="pass-item">Exactly one <code>&lt;h1&gt;</code>, clean H1→H2→H3 hierarchy with no skipped levels.</div>
-      <div class="pass-item">Valid <code>ProfessionalService</code> JSON-LD schema with structured <code>Offer</code> pricing.</div>
-      <div class="pass-item">HTTP→HTTPS 301 redirect in place; no mixed content.</div>
+      <div class="pass-item"><span>robots.txt is open (<code>Allow: /</code>) and correctly references the sitemap.</span></div>
+      <div class="pass-item"><span>Self-referencing canonical tag present and correct.</span></div>
+      <div class="pass-item"><span>Exactly one <code>&lt;h1&gt;</code>, clean H1→H2→H3 hierarchy with no skipped levels.</span></div>
+      <div class="pass-item"><span>Valid <code>ProfessionalService</code> JSON-LD schema with structured <code>Offer</code> pricing.</span></div>
+      <div class="pass-item"><span>HTTP→HTTPS 301 redirect in place; no mixed content.</span></div>
     </div>
   </section>
 
   <section>
-    <div class="section-head"><span class="section-num">02</span><h2>AI-SEO (AEO / GEO)</h2><span class="section-score">3.5<b> /10</b></span></div>
+    <div class="section-head"><h2>AI-SEO (AEO / GEO)</h2><span class="section-score" style="--tone:var(--critical)">3.5<b> /10</b></span></div>
     <p class="section-intro">The weakest link relative to the business itself. A shop selling "AI UX diagnostics" has done nothing to make its own site legible to the AI systems its buyers increasingly search through.</p>
 
     <div class="finding" style="--sev:var(--high);--sev-bg:var(--high-bg)">
@@ -231,13 +249,13 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-fa
 
     <h2 style="font-size:16px;margin:28px 0 12px;color:var(--ink-2)">What's already right</h2>
     <div class="pass-list">
-      <div class="pass-item">robots.txt doesn't block AI crawlers (GPTBot, ClaudeBot, PerplexityBot) — wildcard allow covers them.</div>
-      <div class="pass-item">Existing <code>ProfessionalService</code> schema does give a machine-readable price range and offer list — a real head start most competitors skip.</div>
+      <div class="pass-item"><span>robots.txt doesn't block AI crawlers (GPTBot, ClaudeBot, PerplexityBot) — wildcard allow covers them.</span></div>
+      <div class="pass-item"><span>Existing <code>ProfessionalService</code> schema does give a machine-readable price range and offer list — a real head start most competitors skip.</span></div>
     </div>
   </section>
 
   <section>
-    <div class="section-head"><span class="section-num">03</span><h2>Engagement &amp; conversion</h2><span class="section-score">5.5<b> /10</b></span></div>
+    <div class="section-head"><h2>Engagement &amp; conversion</h2><span class="section-score" style="--tone:var(--high)">5.5<b> /10</b></span></div>
     <p class="section-intro">The qualifier-quiz → tier-recommendation → payment-link flow is a genuinely good conversion pattern. The gaps are in trust-building and failure handling.</p>
 
     <div class="finding" style="--sev:var(--high);--sev-bg:var(--high-bg)">
@@ -269,14 +287,14 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-fa
 
     <h2 style="font-size:16px;margin:28px 0 12px;color:var(--ink-2)">What's already right</h2>
     <div class="pass-list">
-      <div class="pass-item">The qualifier quiz → tier recommendation pattern reduces decision paralysis better than a flat three-column pricing table.</div>
-      <div class="pass-item">Honeypot field (<code>bot-field</code>) present on the form for spam filtering.</div>
-      <div class="pass-item">Client-side email/required-field validation with inline, specific error text (not just "invalid input").</div>
+      <div class="pass-item"><span>The qualifier quiz → tier recommendation pattern reduces decision paralysis better than a flat three-column pricing table.</span></div>
+      <div class="pass-item"><span>Honeypot field (<code>bot-field</code>) present on the form for spam filtering.</span></div>
+      <div class="pass-item"><span>Client-side email/required-field validation with inline, specific error text (not just "invalid input").</span></div>
     </div>
   </section>
 
   <section>
-    <div class="section-head"><span class="section-num">04</span><h2>Analytics</h2><span class="section-score">0.5<b> /10</b></span></div>
+    <div class="section-head"><h2>Analytics</h2><span class="section-score" style="--tone:var(--critical)">0.5<b> /10</b></span></div>
     <p class="section-intro">There is none. Checked the full rendered HTML for GA4/gtag, GTM, Meta/LinkedIn pixels, Hotjar, Clarity, Plausible, Fathom, Segment, PostHog, Mixpanel — no matches for any of them.</p>
 
     <div class="finding" style="--sev:var(--critical);--sev-bg:var(--critical-bg)">
@@ -290,7 +308,7 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-fa
   </section>
 
   <section>
-    <div class="section-head"><span class="section-num">05</span><h2>Security</h2><span class="section-score">6.0<b> /10</b></span></div>
+    <div class="section-head"><h2>Security</h2><span class="section-score" style="--tone:var(--high)">6.0<b> /10</b></span></div>
     <p class="section-intro">No leaked secrets, sound CORS posture, good <code>rel="noopener"</code> hygiene on external links. One real, meaningful misconfiguration: the security headers aren't actually reaching the page visitors load.</p>
 
     <div class="finding" style="--sev:var(--critical);--sev-bg:var(--critical-bg)">
@@ -304,16 +322,16 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-fa
 
     <h2 style="font-size:16px;margin:28px 0 12px;color:var(--ink-2)">What's already right</h2>
     <div class="pass-list">
-      <div class="pass-item">No API keys, tokens, or secrets found anywhere in page source.</div>
-      <div class="pass-item">Every <code>target="_blank"</code> link correctly carries <code>rel="noopener"</code> — no reverse-tabnabbing exposure.</div>
-      <div class="pass-item">Third-party script (three.js) is loaded with a Subresource Integrity hash, so a compromised CDN file can't silently execute.</div>
-      <div class="pass-item">Lead form has honeypot spam protection and is a same-origin POST — no unnecessary CORS surface.</div>
-      <div class="pass-item">The (misapplied, but well-designed) CSP itself is a reasonable starting policy once it's actually applied to the right response.</div>
+      <div class="pass-item"><span>No API keys, tokens, or secrets found anywhere in page source.</span></div>
+      <div class="pass-item"><span>Every <code>target="_blank"</code> link correctly carries <code>rel="noopener"</code> — no reverse-tabnabbing exposure.</span></div>
+      <div class="pass-item"><span>Third-party script (three.js) is loaded with a Subresource Integrity hash, so a compromised CDN file can't silently execute.</span></div>
+      <div class="pass-item"><span>Lead form has honeypot spam protection and is a same-origin POST — no unnecessary CORS surface.</span></div>
+      <div class="pass-item"><span>The (misapplied, but well-designed) CSP itself is a reasonable starting policy once it's actually applied to the right response.</span></div>
     </div>
   </section>
 
   <section>
-    <div class="section-head"><span class="section-num">06</span><h2>Prioritized path to 10.0</h2></div>
+    <div class="section-head"><h2>Prioritized path to 10.0</h2></div>
     <p class="section-intro">Ordered by impact ÷ effort. The first three are each under an hour of work and account for most of the score gap.</p>
     <div class="tbl-wrap">
       <table class="plan-table">
@@ -339,5 +357,35 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);font-fa
   </footer>
 
 </div>
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var gauge = document.getElementById('gauge');
+  var readout = document.getElementById('gaugeReadout');
+  var target = parseFloat(gauge.dataset.score);
+  var pct = target / 10 * 100;
+  var bars = document.querySelectorAll('#subscores .subscore-fill');
+
+  if (reduced) {
+    gauge.style.setProperty('--pct', pct);
+    readout.innerHTML = target.toFixed(1) + '<sup>/10</sup>';
+    bars.forEach(function(b){ b.classList.add('on'); });
+    return;
+  }
+
+  bars.forEach(function(b, i){ b.style.transitionDelay = (i * 45) + 'ms'; b.classList.add('on'); });
+
+  var start = null, dur = 1100;
+  function step(ts){
+    if (!start) start = ts;
+    var p = Math.min(1, (ts - start) / dur);
+    var eased = 1 - Math.pow(1 - p, 3);
+    gauge.style.setProperty('--pct', (pct * eased).toFixed(2));
+    readout.innerHTML = (target * eased).toFixed(1) + '<sup>/10</sup>';
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+})();
+</script>
 </body>
 </html>
