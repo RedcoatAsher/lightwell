@@ -59,7 +59,7 @@
   ringSvg.prepend(defs)
 
   // ---- header ----
-  document.getElementById('title').textContent = 'Lightwell'
+  document.getElementById('title').textContent = 'LightwellHQ Audit Report'
   document.getElementById('subtitle').textContent = T.subtitle
   document.getElementById('src').textContent = T.source
 
