@@ -1,10 +1,11 @@
 {
   "redirects": [
-    { "source": "/", "destination": "/audit", "permanent": false }
+    { "source": "/", "destination": "/audit", "permanent": false },
+    { "source": "/tracker", "destination": "/tracker/", "permanent": false }
   ],
   "rewrites": [
     { "source": "/audit", "destination": "/lightwell-audit-report.html" },
-    { "source": "/tracker", "destination": "/.shinpo/index.html" },
+    { "source": "/tracker/", "destination": "/.shinpo/index.html" },
     { "source": "/tracker/:path*", "destination": "/.shinpo/:path*" }
   ]
 }
