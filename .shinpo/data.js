@@ -1,5 +1,5 @@
 window.SHINPO = {
-  title: 'Lightwell — Shinpo',
+  title: 'LightwellHQ Audit Report — Shinpo',
   subtitle: 'Live progress on lightwellhq.com audit fixes. Tick as you go — saved in this browser.',
   source: 'lightwell-audit-report.html (4.6/10.0, 2026-08-19)',
   milestones: [
