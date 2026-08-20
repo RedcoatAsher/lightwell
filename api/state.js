@@ -1,13 +1,17 @@
 // Shared, server-side persisted tracker state (checked steps) — the source of
 // truth for /tracker across every visitor. Reads are public; writes require the
 // tracker password once, then an HttpOnly cookie carries auth for future visits.
-const { put } = require('@vercel/blob')
+//
+// Uses Upstash Redis (strongly consistent) rather than Blob storage — Blob is
+// CDN-backed and has real write-then-read propagation lag, which showed up as
+// stale reads immediately after a write. Redis has none of that.
+const { Redis } = require('@upstash/redis')
 const crypto = require('crypto')
 
-const BLOB_PATH = 'shinpo/state.json'
-// Deterministic (no random suffix) — the same URL every write lands at. Read
-// this directly instead of via list(), whose index lags a write by ~1 request.
-const BLOB_URL = `${process.env.BLOB_BASE_URL}/${BLOB_PATH}`
+// The Vercel Marketplace Upstash integration names vars KV_REST_API_* rather
+// than the UPSTASH_REDIS_REST_* that Redis.fromEnv() looks for.
+const redis = new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN })
+const STATE_KEY = 'shinpo:state'
 const COOKIE_NAME = 'shinpo_auth'
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 90 // 90 days — trusted client shouldn't re-enter it
 
@@ -41,21 +45,13 @@ function setAuthCookie(res) {
 }
 
 async function readState() {
-  // The blob CDN caches by exact URL — bust it on every read so a fresh write
-  // is never masked by a stale cached response.
-  const res = await fetch(`${BLOB_URL}?v=${Date.now()}`, { cache: 'no-store' })
-  if (!res.ok) return { done: [], updatedAt: null } // 404 = no writes yet
-  return res.json()
+  const state = await redis.get(STATE_KEY)
+  return state || { done: [], updatedAt: null }
 }
 
 async function writeState(state) {
   state.updatedAt = Date.now()
-  await put(BLOB_PATH, JSON.stringify(state), {
-    access: 'public',
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: 'application/json',
-  })
+  await redis.set(STATE_KEY, state)
   return state
 }
 
