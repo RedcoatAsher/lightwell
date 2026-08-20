@@ -14,24 +14,18 @@
   const seeded = new Set(allSteps.filter((st) => st.done).map((st) => st.id))
 
   // ---- state ----
+  // `done` is shared across every visitor — persisted server-side (see
+  // /api/state), not localStorage. Only `open` (which sections are expanded)
+  // stays per-browser; it's a view preference, not tracker data.
   let state = load()
   function load() {
     let raw = {}
     try { raw = JSON.parse(localStorage.getItem(KEY) || '{}') } catch { raw = {} }
-    const done = new Set(raw.done || [])
-    // Steps marked `done: true` in data.js are authoritatively complete (confirmed
-    // applied/verified out-of-band) — always merge them in, on top of local ticks.
-    T.sections.forEach((s) => s.steps.forEach((st) => { if (st.done) done.add(st.id) }))
-    return { done, open: new Set(raw.open || null), savedAt: raw.savedAt }
+    const done = new Set(seeded) // seeded steps always start complete; server sync adds the rest
+    return { done, open: new Set(raw.open || null), serverUpdatedAt: null }
   }
-  function save() {
-    state.savedAt = Date.now()
-    localStorage.setItem(KEY, JSON.stringify({ done: [...state.done], open: [...state.open], savedAt: state.savedAt }))
-    renderSavedAt()
-  }
-  // First run: open every not-yet-complete section.
-  if (!localStorage.getItem(KEY)) {
-    T.sections.forEach((s) => { if (!secComplete(s)) state.open.add(s.id) })
+  function saveOpen() {
+    localStorage.setItem(KEY, JSON.stringify({ open: [...state.open] }))
   }
 
   function secComplete(s) {
@@ -107,23 +101,72 @@
     secWrap.appendChild(sec)
 
     const head = sec.querySelector('.sec-head')
-    const toggle = () => { sec.classList.toggle('open'); state.open.has(s.id) ? state.open.delete(s.id) : state.open.add(s.id); head.setAttribute('aria-expanded', sec.classList.contains('open')); save() }
+    const toggle = () => { sec.classList.toggle('open'); state.open.has(s.id) ? state.open.delete(s.id) : state.open.add(s.id); head.setAttribute('aria-expanded', sec.classList.contains('open')); saveOpen() }
     head.addEventListener('click', toggle)
     head.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle() } })
 
     sec.querySelectorAll('.step').forEach((li) => {
-      const toggleStep = () => {
+      const onToggle = () => {
         const id = li.dataset.id
         if (seeded.has(id)) return // seeded done:true steps are permanently complete
-        state.done.has(id) ? state.done.delete(id) : state.done.add(id)
-        const d = state.done.has(id)
-        li.classList.toggle('done', d); li.setAttribute('aria-pressed', d)
-        save(); applyFilter(); refresh(true)
+        requestToggle(id, !state.done.has(id))
       }
-      li.addEventListener('click', toggleStep)
-      li.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleStep() } })
+      li.addEventListener('click', onToggle)
+      li.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle() } })
     })
   })
+
+  // ---- server-persisted done state + password gate ----
+  const authDialog = document.getElementById('authDialog')
+  const authForm = document.getElementById('authForm')
+  const authPassword = document.getElementById('authPassword')
+  const authError = document.getElementById('authError')
+  let pendingAction = null // { action: 'toggle', id, on } | { action: 'reset' }
+
+  async function callApi(payload) {
+    const res = await fetch('/api/state', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(payload),
+    })
+    return res
+  }
+
+  async function applyServerState(json) {
+    state.done = new Set([...seeded, ...(json.done || [])])
+    state.serverUpdatedAt = json.updatedAt || state.serverUpdatedAt
+    applyFilter(); refresh(true); renderSavedAt()
+  }
+
+  function openAuth(action) {
+    pendingAction = action
+    authError.hidden = true
+    authPassword.value = ''
+    authDialog.showModal()
+    setTimeout(() => authPassword.focus(), 30)
+  }
+
+  document.getElementById('authCancel').onclick = () => { pendingAction = null; authDialog.close() }
+  authForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    if (!pendingAction) return authDialog.close()
+    const res = await callApi({ ...pendingAction, password: authPassword.value })
+    if (res.status === 401) { authError.hidden = false; authPassword.value = ''; authPassword.focus(); return }
+    if (res.ok) { authDialog.close(); pendingAction = null; applyServerState(await res.json()) }
+  })
+
+  async function requestToggle(id, on) {
+    const res = await callApi({ action: 'toggle', id, on })
+    if (res.status === 401) return openAuth({ action: 'toggle', id, on })
+    if (res.ok) applyServerState(await res.json())
+  }
+
+  async function requestReset() {
+    const res = await callApi({ action: 'reset' })
+    if (res.status === 401) return openAuth({ action: 'reset' })
+    if (res.ok) applyServerState(await res.json())
+  }
 
   // ---- filters ----
   let filter = 'all'
@@ -225,17 +268,13 @@
 
   function renderSavedAt() {
     const el = document.getElementById('savedAt')
-    el.textContent = state.savedAt ? 'Saved ' + new Date(state.savedAt).toLocaleString() : 'Not started'
+    el.textContent = state.serverUpdatedAt ? 'Saved ' + new Date(state.serverUpdatedAt).toLocaleString() : 'Not started'
   }
 
   // ---- reset ----
   document.getElementById('resetBtn').onclick = () => {
-    if (!confirm('Reset all progress in this browser?')) return
-    state.done.clear()
-    seeded.forEach((id) => state.done.add(id)) // seeded steps stay complete
-    localStorage.removeItem(KEY)
-    document.querySelectorAll('.step.done').forEach((s) => s.classList.remove('done'))
-    save(); applyFilter(); refresh(false)
+    if (!confirm('Reset all progress for everyone viewing this tracker?')) return
+    requestReset()
   }
 
   // ---- confetti (hand-rolled) ----
@@ -271,8 +310,23 @@
   }
 
   // ---- boot ----
+  // First run (no local view-prefs yet): open every not-yet-complete section
+  // once seeded-only state is known; refined again once the server responds.
+  if (!localStorage.getItem(KEY)) {
+    T.sections.forEach((s) => { if (!secComplete(s)) state.open.add(s.id) })
+  }
   applyFilter()
   renderSavedAt()
-  // animate the ring from 0 on first paint
+  // animate the ring from 0 on first paint, then pull the real shared state
   requestAnimationFrame(() => requestAnimationFrame(() => refresh(false)))
+  fetch('/api/state', { credentials: 'same-origin' })
+    .then((r) => r.json())
+    .then((json) => {
+      applyServerState(json)
+      if (!localStorage.getItem(KEY)) {
+        T.sections.forEach((s) => { if (!secComplete(s)) state.open.add(s.id) })
+        refresh(false)
+      }
+    })
+    .catch(() => {}) // offline / API unavailable: seeded-only state still renders
 })()

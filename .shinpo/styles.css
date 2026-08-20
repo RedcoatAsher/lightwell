@@ -229,6 +229,27 @@ code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.92em
 
 #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
 
+/* Auth modal */
+.auth-modal {
+  border: 1px solid var(--border-strong); border-radius: 16px; padding: 22px;
+  width: min(360px, calc(100vw - 40px)); background: var(--bg2); color: var(--fg);
+  box-shadow: var(--shadow);
+}
+.auth-modal::backdrop { background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(2px); }
+.auth-modal h3 { margin: 0 0 6px; font-size: 16px; }
+.auth-modal .muted { font-size: 12.5px; margin: 0 0 14px; }
+.auth-modal input {
+  width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 14px;
+  font-family: inherit; color: var(--fg); background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 10px; outline: none;
+  transition: border-color 0.15s;
+}
+.auth-modal input:focus { border-color: var(--accent); }
+.auth-error { color: var(--warn); font-size: 12px; margin: 8px 0 0; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+.ghost.primary { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--grad-from), var(--grad-to)); }
+.ghost.primary:hover { filter: brightness(1.08); background: linear-gradient(135deg, var(--grad-from), var(--grad-to)); }
+
 @media (max-width: 620px) {
   .hero { flex-direction: column; text-align: center; }
   .sec-meta .mini-bar { display: none; }

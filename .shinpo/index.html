@@ -69,6 +69,19 @@
       </footer>
     </main>
 
+    <dialog id="authDialog" class="auth-modal">
+      <h3>Enter password to edit</h3>
+      <p class="muted">Ticking a step saves for everyone viewing this tracker — password required once.</p>
+      <form id="authForm">
+        <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password" autofocus />
+        <p id="authError" class="auth-error" hidden>Wrong password.</p>
+        <div class="modal-actions">
+          <button type="button" id="authCancel" class="ghost">Cancel</button>
+          <button type="submit" id="authSubmit" class="ghost primary">Unlock</button>
+        </div>
+      </form>
+    </dialog>
+
     <canvas id="confetti" aria-hidden="true"></canvas>
 
     <script src="data.js"></script>
