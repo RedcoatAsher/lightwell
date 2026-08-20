@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lightwell — Shinpo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="aurora" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot"></span>
+        <div>
+          <h1 id="title">Lightwell</h1>
+          <p id="subtitle" class="muted"></p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button id="themeBtn" class="ghost" title="Toggle theme" aria-label="Toggle theme">◐</button>
+        <button id="resetBtn" class="ghost" title="Reset progress">Reset</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero: overall ring + milestones -->
+      <section class="hero card">
+        <div class="ring-wrap">
+          <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring-track" cx="60" cy="60" r="52" />
+            <circle class="ring-fill" cx="60" cy="60" r="52" />
+          </svg>
+          <div class="ring-label">
+            <span id="overallPct" class="ring-pct">0%</span>
+            <span class="muted ring-sub">complete</span>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-head">
+            <h2>Audit fix progress</h2>
+            <span id="overallCount" class="pill pill-soft">0 / 0 steps</span>
+            <span id="overallTotal" class="pill pill-soft" title="Total estimated hands-on time (all sections)">⏱ —</span>
+            <span id="overallTime" class="pill pill-time" title="Estimated hands-on time remaining (unfinished sections)">⏱ —</span>
+          </div>
+          <div id="milestones" class="milestones"></div>
+          <div class="legend">
+            <span><b>👤</b> you</span><span><b>🤝</b> with Claude</span><span><b>👾</b> Claude can do</span>
+            <span class="legend-sep"></span>
+            <span class="tier-key tier-mvp">MVP</span><span class="tier-key tier-full">Full</span><span class="tier-key tier-opt">Optional</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <nav class="filters" id="filters">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="mvp">MVP only</button>
+        <button class="chip" data-filter="open">Unfinished</button>
+        <button class="chip" data-filter="mine">👤 You</button>
+      </nav>
+
+      <!-- Sections render here -->
+      <div id="sections" class="sections"></div>
+
+      <footer class="foot muted">
+        <span>Source: <code id="src"></code></span>
+        <span id="savedAt"></span>
+      </footer>
+    </main>
+
+    <canvas id="confetti" aria-hidden="true"></canvas>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
